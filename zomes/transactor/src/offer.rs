@@ -18,10 +18,14 @@ pub struct CreateOfferInput {
 }
 #[hdk_extern]
 pub fn create_offer(input: CreateOfferInput) -> ExternResult<WrappedEntryHash> {
-    let agent_info = agent_info()?;
+    let my_pub_key = agent_info()?.agent_latest_pubkey;
+
+    if input.recipient_pub_key.0.eq(&my_pub_key) {
+        return Err(crate::err("An agent cannot create an offer to themselves"));
+    }
 
     let offer = Offer {
-        spender_pub_key: WrappedAgentPubKey(agent_info.agent_latest_pubkey),
+        spender_pub_key: WrappedAgentPubKey(my_pub_key),
         amount: input.amount,
         recipient_pub_key: input.recipient_pub_key.clone(),
     };
