@@ -1,3 +1,4 @@
+use hc_utils::WrappedAgentPubKey;
 use hdk3::prelude::*;
 
 mod offer;
@@ -15,4 +16,10 @@ pub fn defs() -> EntryDefs {
 #[hdk_extern]
 fn entry_defs(_: ()) -> ExternResult<EntryDefsCallbackResult> {
     Ok(EntryDefsCallbackResult::Defs(defs()))
+}
+
+#[hdk_extern]
+pub fn who_am_i(_: ()) -> ExternResult<WrappedAgentPubKey> {
+    let info = agent_info()?;
+    Ok(WrappedAgentPubKey(info.agent_latest_pubkey))
 }

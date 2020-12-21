@@ -5,6 +5,9 @@
   "zomes": {
     "transactor": {
       "wasm_path": "../target/wasm32-unknown-unknown/release/transactor.wasm"
+    },
+    "profiles": {
+      "wasm_path": "../target/wasm32-unknown-unknown/release/profiles.wasm"
     }
   }
 }

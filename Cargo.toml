@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "zomes/transactor",
+  "zomes/profiles",
 ]
 
 [profile.dev]

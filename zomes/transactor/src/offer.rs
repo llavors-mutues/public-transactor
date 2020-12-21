@@ -46,13 +46,21 @@ pub fn receive_offer(offer: Offer) -> ExternResult<WrappedEntryHash> {
 
 #[hdk_extern]
 pub fn accept_offer(offer_hash: WrappedEntryHash) -> ExternResult<WrappedEntryHash> {
-    let maybe_offer = query_offer(offer_hash.0)?;
+    let maybe_offer = internal_query_offer(offer_hash.0)?;
 
     let offer = maybe_offer.ok_or(crate::err("Offer not found"))?;
 
     let entry_hash = transaction::create_transaction_for_offer(offer)?;
 
     Ok(WrappedEntryHash(entry_hash))
+}
+
+#[derive(Clone, Serialize, Deserialize, SerializedBytes)]
+pub struct QueryOfferOutput(Option<Offer>);
+#[hdk_extern]
+pub fn query_offer(offer_hash: WrappedEntryHash) -> ExternResult<QueryOfferOutput> {
+    let offer = internal_query_offer(offer_hash.0)?;
+    Ok(QueryOfferOutput(offer))
 }
 
 #[derive(Clone, Serialize, Deserialize, SerializedBytes)]
@@ -109,7 +117,7 @@ fn query_all_offers() -> ExternResult<Vec<Element>> {
     Ok(query_result.0)
 }
 
-fn query_offer(offer_hash: EntryHash) -> ExternResult<Option<Offer>> {
+fn internal_query_offer(offer_hash: EntryHash) -> ExternResult<Option<Offer>> {
     let all_offers = query_all_offers()?;
 
     let maybe_offer_element = all_offers.into_iter().find(|offer_element| {
