@@ -4,7 +4,8 @@
   "properties": null,
   "zomes": {
     "transactor": {
-      "wasm_path": "../target/wasm32-unknown-unknown/release/transactor.wasm"
+      "wasm_path": "../target/wasm32-unknown-unknown/release/transactor.wasm",
+      "ui_path": "../../public-transactions-ui/bundle/bundle.js"
     },
     "profiles": {
       "wasm_path": "../target/wasm32-unknown-unknown/release/profiles.wasm"

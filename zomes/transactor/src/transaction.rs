@@ -13,7 +13,7 @@ pub struct Transaction {
     timestamp: Timestamp,
 }
 
-pub fn create_transaction_for_offer(offer: Offer) -> ExternResult<EntryHash> {
+pub fn create_transaction_for_offer(offer: Offer) -> ExternResult<(EntryHash, Transaction)> {
     let time = sys_time()?;
     let transaction = Transaction {
         spender_pub_key: offer.spender_pub_key.clone(),
@@ -32,7 +32,7 @@ pub fn create_transaction_for_offer(offer: Offer) -> ExternResult<EntryHash> {
     create_link(spender_pub_key.into(), transaction_hash.clone(), ())?;
     create_link(recipient_pub_key.into(), transaction_hash.clone(), ())?;
 
-    Ok(transaction_hash)
+    Ok((transaction_hash, transaction))
 }
 
 #[derive(Clone, Serialize, Deserialize, SerializedBytes)]

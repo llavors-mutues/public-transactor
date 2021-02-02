@@ -1,7 +1,8 @@
 use hc_utils::{WrappedAgentPubKey, WrappedEntryHash};
 use hdk3::prelude::*;
+use transaction::Transaction;
 
-use crate::{transaction, utils};
+use crate::{signals::SignalType, transaction, utils};
 
 #[hdk_entry(id = "offer", visibility = "private")]
 #[derive(Clone)]
@@ -45,7 +46,11 @@ pub fn create_offer(input: CreateOfferInput) -> ExternResult<WrappedEntryHash> {
 
 #[hdk_extern]
 pub fn receive_offer(offer: Offer) -> ExternResult<WrappedEntryHash> {
-    internal_create_offer(&offer)
+    let offer_hash = internal_create_offer(&offer)?;
+
+    emit_signal(SignalType::OfferReceived(offer))?;
+
+    Ok(offer_hash)
 }
 
 #[hdk_extern]
@@ -54,9 +59,25 @@ pub fn accept_offer(offer_hash: WrappedEntryHash) -> ExternResult<WrappedEntryHa
 
     let offer = maybe_offer.ok_or(crate::err("Offer not found"))?;
 
-    let entry_hash = transaction::create_transaction_for_offer(offer)?;
+    let (entry_hash, transaction) = transaction::create_transaction_for_offer(offer.clone())?;
+
+    // Notify new transaction to counterparty
+    call_remote(
+        offer.spender_pub_key.0,
+        zome_info()?.zome_name,
+        "notify_accepted_offer".into(),
+        None,
+        &transaction,
+    )?;
 
     Ok(WrappedEntryHash(entry_hash))
+}
+
+#[hdk_extern]
+pub fn notify_accepted_offer(transaction: Transaction) -> ExternResult<()> {
+    emit_signal(SignalType::OfferAccepted(transaction))?;
+
+    Ok(())
 }
 
 #[derive(Clone, Serialize, Deserialize, SerializedBytes)]
