@@ -81,14 +81,6 @@ pub fn notify_accepted_offer(transaction: Transaction) -> ExternResult<()> {
 }
 
 #[derive(Clone, Serialize, Deserialize, SerializedBytes)]
-pub struct QueryOfferOutput(Option<Offer>);
-#[hdk_extern]
-pub fn query_offer(offer_hash: WrappedEntryHash) -> ExternResult<QueryOfferOutput> {
-    let offer = internal_query_offer(offer_hash.0)?;
-    Ok(QueryOfferOutput(offer))
-}
-
-#[derive(Clone, Serialize, Deserialize, SerializedBytes)]
 pub struct HashedOffer {
     hash: WrappedEntryHash,
     content: Offer,
