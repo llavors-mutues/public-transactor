@@ -37,17 +37,15 @@ pub fn create_transaction_for_offer(offer: Offer) -> ExternResult<(EntryHash, Tr
     Ok((transaction_hash, transaction))
 }
 
-#[derive(Clone, Serialize, Deserialize, SerializedBytes)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct HashedTransaction {
     hash: WrappedEntryHash,
     content: Transaction,
 }
-#[derive(Clone, Serialize, Deserialize, SerializedBytes)]
-pub struct GetTransactionsForAgentOutput(Vec<HashedTransaction>);
 #[hdk_extern]
 pub fn get_transactions_for_agent(
     agent_pub_key: WrappedAgentPubKey,
-) -> ExternResult<GetTransactionsForAgentOutput> {
+) -> ExternResult<Vec<HashedTransaction>> {
     let links = get_links(agent_pub_key.0.into(), None)?;
 
     let transactions: Vec<HashedTransaction> = links
@@ -62,5 +60,5 @@ pub fn get_transactions_for_agent(
         })
         .collect::<ExternResult<Vec<HashedTransaction>>>()?;
 
-    Ok(GetTransactionsForAgentOutput(transactions))
+    Ok(transactions)
 }

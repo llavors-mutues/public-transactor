@@ -12,7 +12,7 @@ pub struct Offer {
     pub amount: f64,
 }
 
-#[derive(Serialize, Deserialize, SerializedBytes)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct CreateOfferInput {
     recipient_pub_key: WrappedAgentPubKey,
     amount: f64,
@@ -85,15 +85,13 @@ pub fn notify_accepted_offer(transaction: Transaction) -> ExternResult<()> {
     Ok(())
 }
 
-#[derive(Clone, Serialize, Deserialize, SerializedBytes)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct HashedOffer {
     hash: WrappedEntryHash,
     content: Offer,
 }
-#[derive(Clone, Serialize, Deserialize, SerializedBytes)]
-pub struct QueryMyPendingOffersOutput(Vec<HashedOffer>);
 #[hdk_extern]
-pub fn query_my_pending_offers(_: ()) -> ExternResult<QueryMyPendingOffersOutput> {
+pub fn query_my_pending_offers(_: ()) -> ExternResult<Vec<HashedOffer>> {
     let offers_elements = query_all_offers()?;
 
     let offers: Vec<HashedOffer> = offers_elements
@@ -107,7 +105,7 @@ pub fn query_my_pending_offers(_: ()) -> ExternResult<QueryMyPendingOffersOutput
         })
         .collect::<ExternResult<Vec<HashedOffer>>>()?;
 
-    Ok(QueryMyPendingOffersOutput(offers))
+    Ok(offers)
 }
 
 /** Helper functions */
