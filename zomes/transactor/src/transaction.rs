@@ -9,6 +9,7 @@ use crate::{offer::Offer, utils};
 pub struct Transaction {
     spender_pub_key: WrappedAgentPubKey,
     recipient_pub_key: WrappedAgentPubKey,
+    offer_hash: WrappedEntryHash,
     amount: f64,
     timestamp: Timestamp,
 }
@@ -19,6 +20,7 @@ pub fn create_transaction_for_offer(offer: Offer) -> ExternResult<(EntryHash, Tr
         spender_pub_key: offer.spender_pub_key.clone(),
         recipient_pub_key: offer.recipient_pub_key.clone(),
         amount: offer.amount,
+        offer_hash: WrappedEntryHash(hash_entry(&offer)?),
         timestamp: Timestamp(time.as_secs() as i64, time.subsec_nanos()),
     };
 
