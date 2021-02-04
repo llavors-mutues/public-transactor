@@ -6,8 +6,8 @@ mod signals;
 mod transaction;
 mod utils;
 
-pub fn err(reason: &str) -> HdkError {
-    HdkError::Wasm(WasmError::Zome(String::from(reason)))
+pub fn err(reason: &str) -> WasmError {
+    WasmError::Zome(String::from(reason))
 }
 
 pub fn defs() -> EntryDefs {

@@ -33,13 +33,18 @@ pub fn create_offer(input: CreateOfferInput) -> ExternResult<WrappedEntryHash> {
 
     let my_offer_hash = internal_create_offer(&offer)?;
 
-    let _offer_hash: WrappedEntryHash = call_remote(
+    let response = call_remote(
         input.recipient_pub_key.0,
         zome_info()?.zome_name,
         "receive_offer".into(),
         None,
         &offer,
     )?;
+
+    match response {
+        ZomeCallResponse::Ok(_) => Ok(()),
+        _ => Err(crate::err("Failed to call remote receive_offer")),
+    }?;
 
     Ok(my_offer_hash)
 }
