@@ -2,7 +2,10 @@ use hc_utils::{WrappedAgentPubKey, WrappedEntryHash};
 use hdk3::prelude::timestamp::Timestamp;
 use hdk3::prelude::*;
 
-use crate::{offer::Offer, utils};
+use crate::{
+    offer::Offer,
+    utils::{self, Hashed},
+};
 
 #[hdk_entry(id = "transaction", visibility = "public")]
 #[derive(Clone)]
@@ -14,7 +17,7 @@ pub struct Transaction {
     timestamp: Timestamp,
 }
 
-pub fn create_transaction_for_offer(offer: Offer) -> ExternResult<(EntryHash, Transaction)> {
+pub fn create_transaction_for_offer(offer: Offer) -> ExternResult<Hashed<Transaction>> {
     let time = sys_time()?;
     let transaction = Transaction {
         spender_pub_key: offer.spender_pub_key.clone(),
@@ -34,31 +37,29 @@ pub fn create_transaction_for_offer(offer: Offer) -> ExternResult<(EntryHash, Tr
     create_link(spender_pub_key.into(), transaction_hash.clone(), ())?;
     create_link(recipient_pub_key.into(), transaction_hash.clone(), ())?;
 
-    Ok((transaction_hash, transaction))
+    Ok(Hashed {
+        hash: WrappedEntryHash(transaction_hash),
+        content: transaction,
+    })
 }
 
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct HashedTransaction {
-    hash: WrappedEntryHash,
-    content: Transaction,
-}
 #[hdk_extern]
 pub fn get_transactions_for_agent(
     agent_pub_key: WrappedAgentPubKey,
-) -> ExternResult<Vec<HashedTransaction>> {
+) -> ExternResult<Vec<Hashed<Transaction>>> {
     let links = get_links(agent_pub_key.0.into(), None)?;
 
-    let transactions: Vec<HashedTransaction> = links
+    let transactions: Vec<Hashed<Transaction>> = links
         .into_inner()
         .iter()
         .map(|link| {
             let transaction: Transaction = utils::try_get_and_convert(link.target.clone())?;
-            Ok(HashedTransaction {
+            Ok(Hashed {
                 hash: WrappedEntryHash(link.target.clone()),
                 content: transaction,
             })
         })
-        .collect::<ExternResult<Vec<HashedTransaction>>>()?;
+        .collect::<ExternResult<Vec<Hashed<Transaction>>>>()?;
 
     Ok(transactions)
 }

@@ -2,7 +2,11 @@ use hc_utils::{WrappedAgentPubKey, WrappedEntryHash};
 use hdk3::prelude::*;
 use transaction::Transaction;
 
-use crate::{signals::SignalType, transaction, utils};
+use crate::{
+    signals::SignalType,
+    transaction,
+    utils::{self, Hashed},
+};
 
 #[hdk_entry(id = "offer", visibility = "private")]
 #[derive(Clone)]
@@ -33,25 +37,24 @@ pub fn create_offer(input: CreateOfferInput) -> ExternResult<WrappedEntryHash> {
 
     let my_offer_hash = internal_create_offer(&offer)?;
 
-    let response = call_remote(
+    // TODO: handle the result
+    call_remote(
         input.recipient_pub_key.0,
         zome_info()?.zome_name,
         "receive_offer".into(),
         None,
-        &offer,
+        &Hashed {
+            hash: my_offer_hash.clone(),
+            content: offer,
+        },
     )?;
-
-    match response {
-        ZomeCallResponse::Ok(_) => Ok(()),
-        _ => Err(crate::err("Failed to call remote receive_offer")),
-    }?;
 
     Ok(my_offer_hash)
 }
 
 #[hdk_extern]
-pub fn receive_offer(offer: Offer) -> ExternResult<WrappedEntryHash> {
-    let offer_hash = internal_create_offer(&offer)?;
+pub fn receive_offer(offer: Hashed<Offer>) -> ExternResult<WrappedEntryHash> {
+    let offer_hash = internal_create_offer(&offer.content)?;
 
     emit_signal(SignalType::OfferReceived(offer))?;
 
@@ -64,7 +67,7 @@ pub fn accept_offer(offer_hash: WrappedEntryHash) -> ExternResult<WrappedEntryHa
 
     let offer = maybe_offer.ok_or(crate::err("Offer not found"))?;
 
-    let (entry_hash, transaction) = transaction::create_transaction_for_offer(offer.clone())?;
+    let hashed_transaction = transaction::create_transaction_for_offer(offer.clone())?;
 
     // Notify new transaction to counterparty
     call_remote(
@@ -72,38 +75,33 @@ pub fn accept_offer(offer_hash: WrappedEntryHash) -> ExternResult<WrappedEntryHa
         zome_info()?.zome_name,
         "notify_accepted_offer".into(),
         None,
-        &transaction,
+        &hashed_transaction,
     )?;
 
-    Ok(WrappedEntryHash(entry_hash))
+    Ok(hashed_transaction.hash)
 }
 
 #[hdk_extern]
-pub fn notify_accepted_offer(transaction: Transaction) -> ExternResult<()> {
+pub fn notify_accepted_offer(transaction: Hashed<Transaction>) -> ExternResult<()> {
     emit_signal(SignalType::OfferAccepted(transaction))?;
 
     Ok(())
 }
 
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct HashedOffer {
-    hash: WrappedEntryHash,
-    content: Offer,
-}
 #[hdk_extern]
-pub fn query_my_pending_offers(_: ()) -> ExternResult<Vec<HashedOffer>> {
+pub fn query_my_pending_offers(_: ()) -> ExternResult<Vec<Hashed<Offer>>> {
     let offers_elements = query_all_offers()?;
 
-    let offers: Vec<HashedOffer> = offers_elements
+    let offers: Vec<Hashed<Offer>> = offers_elements
         .into_iter()
         .map(|element| {
             let offer = utils::try_from_element(element.clone())?;
-            Ok(HashedOffer {
+            Ok(Hashed {
                 hash: WrappedEntryHash(element.header().entry_hash().unwrap().clone()),
                 content: offer,
             })
         })
-        .collect::<ExternResult<Vec<HashedOffer>>>()?;
+        .collect::<ExternResult<Vec<Hashed<Offer>>>>()?;
 
     Ok(offers)
 }
