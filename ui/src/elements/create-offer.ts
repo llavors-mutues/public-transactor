@@ -10,6 +10,10 @@ import { Card } from 'scoped-material-components/mwc-card';
 import { connectStore, StoreElement } from '@holochain-open-dev/common';
 import { TransactorStore } from '../transactor.store';
 
+/**
+ * @element create-offer
+ * @fires offer-created - after the offer has been created
+ */
 export abstract class CreateOffer extends StoreElement<TransactorStore> {
   /** Private properties */
 
