@@ -6,8 +6,7 @@ To change the code, you can work either opening VSCode inside the root folder of
 
 ## Requirements
 
-- Having run through [holochain RSM installation](https://github.com/holochain/holochain-dna-build-tutorial).
-- Run all the steps described in this README.md inside the `nix-shell` of the `holochain` core repository.
+- Having [`nix-shell` installed](https://developer.holochain.org/docs/install/).
 - Have [`holochain-run-dna`](https://www.npmjs.com/package/@holochain-open-dev/holochain-run-dna) installed globally, and the `lair-keystore` described in its README as well.
 
 ## Building
@@ -18,6 +17,8 @@ dna-util -c transactor.dna.workdir/
 ```
 
 ## Testing
+
+> Note: tests are not implemented yet.
 
 After having built the DNA:
 

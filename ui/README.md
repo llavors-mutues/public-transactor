@@ -1,30 +1,26 @@
 # UI Developer Setup
 
-UI module for the `calendar-events-zome`.
-
-## Requirements
-
-- Having run through [holochain RSM installation](https://github.com/holochain/holochain-dna-build-tutorial).
-- Having [holochain-run-dna](https://www.npmjs.com/package/@holochain-open-dev/holochain-run-dna) installed.
+UI module for the `transactor` zome.
 
 ## Local Demo with `@web/dev-server`
 
-First, [build the holochain dna](/zomes/README.md). Run this from inside the `nix-shell` in which you have the `holochain` binary install.
+First, [build the holochain dna](/zomes/README.md). 
 
-Run this from inside the `nix-shell` in which you have the `holochain` binary install.
-
-```bash
-npm start
-```
-
-To run a local development server that serves the basic demo located in `demo/index.html`
-Take into account that this will run the holochain conductor in the background and connect the UI to the actual conductor.
-
-## Running only the UI
+To run the alice player:
 
 ```bash
-npm run start-ui
+npm run start-alice
 ```
+
+To run the bob player:
+
+```bash
+npm run start-bob
+```
+
+Now this two players can interact throught their UI.
+
+This runs a local development server that serves the basic demo located in `ui/demo/index.html`
 
 ## Building
 
@@ -48,7 +44,7 @@ npm run test-watch
 
 ## E2E tests
 
-First, [build the holochain dna](/zomes/README.md). Run this from inside the `nix-shell` in which you have the `holochain` binary install.
+First, [build the holochain dna](/zomes/README.md).
 
 ```bash
 npm run e2e
@@ -100,7 +96,7 @@ npm run publish-storybook
 
 This will build the static storybook site, and deploy it directly in the `gh-pages` of your repository.
 
-After this, it will be accessible in the appropriate Github Pages URL (eg. https://holochain-open-dev.github.io/calendar-events-module).
+After this, it will be accessible in the appropriate Github Pages URL (eg. https://llavors-mutues.github.io/public-transactor).
 
 ## Publishing in a branch on this repository
 
@@ -114,6 +110,6 @@ Now, a built version of this module will be at the root of the `ui-build` branch
 
 ```json
   "dependencies": {
-    "@holochain-open-dev/TODO_RENAME_MODULE": "holochain-open-dev/TODO_RENAME_MODULE#ui-build",
+    "@llavors-mutues/public-transactor": "llavors-mutues/public-transactor#ui-build",
   }
 ```
