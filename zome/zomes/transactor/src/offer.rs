@@ -120,15 +120,20 @@ fn offer_entry_type() -> ExternResult<AppEntryType> {
         .entry_def_id_position(EntryDefId::App("offer".into()))
         .unwrap() as u8;
     Ok(AppEntryType::new(
-        entry_def_position.into(),
+        entry_def_index!(Offer),
         zome_info()?.zome_id,
         EntryVisibility::Private,
     ))
 }
 
 fn query_all_offers() -> ExternResult<Vec<Element>> {
+    let offer_entry_type = EntryType::App(AppEntryType::new(
+        entry_def_index!(Offer),
+        zome_info()?.zome_id,
+        EntryVisibility::Private,
+    ));
     let filter = ChainQueryFilter::new()
-        .entry_type(EntryType::App(offer_entry_type()?))
+        .entry_type(offer_entry_type)
         .include_entries(true);
     let query_result = query(filter)?;
 

@@ -21,9 +21,9 @@ let
    holochainVersionId = "custom";
    
    holochainVersion = { 
-    rev = "8c62cb5888f491f08e6fdf13b6f3991f85a9801a";  
-    sha256 = "1kgxyfrwmga27mqywhivn0xdi6br90bavqvnd4kbrfyzbzmf8fcr";  
-    cargoSha256 = "1ix8ihlizjsmx8xaaxknbl0wkyck3kc98spipx5alav8ln4wf46s";
+    rev = "4e1de9c2209a44c67839b9682ad4c9179a96f6c8";  
+    sha256 = "1yqndz2mdmncy5a2j9h3xcabxf62yhr1hdhjdwyghpd42asl8hmr";  
+    cargoSha256 = "1ja1h1717jvvgmxghy4al9qbn5kk007914cislp7gzbn1x2kzbz7";
    };
  };
  # END HOLONIX IMPORT BOILERPLATE
