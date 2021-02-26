@@ -20,9 +20,13 @@
   <body>
     <profile-prompt>
       <div style="display: flex; flex-direction: column; flex: 1">
-        <create-offer style="display: flex; flex: 1"></create-offer>
-        <my-offers style="display: flex; flex: 1"></my-offers>
-        <my-balance style="display: flex; flex: 1"></my-balance>
+        <div style="display: flex; flex-direction: row; flex: 1">
+          <create-offer
+            style="display: flex; flex: 1; margin: 16px"
+          ></create-offer>
+          <my-offers style="display: flex; flex: 1; margin: 16px"></my-offers>
+        </div>
+        <my-balance style="display: flex; flex: 1; margin: 16px"></my-balance>
       </div>
     </profile-prompt>
 
@@ -74,15 +78,9 @@
           'profile-prompt',
           connectStore(ProfilePrompt, profilesStore)
         );
-        customElements.define(
-          'create-offer',
-          connectStore(CreateOffer, store)
-        );
+        customElements.define('create-offer', connectStore(CreateOffer, store));
         customElements.define('my-offers', connectStore(MyOffers, store));
-        customElements.define(
-          'my-balance',
-          connectStore(MyBalance, store)
-        );
+        customElements.define('my-balance', connectStore(MyBalance, store));
       })();
     </script>
   </body>
