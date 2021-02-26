@@ -4,6 +4,8 @@
 
 This module is designed to be included in other DNAs, assuming as little as possible from those. It is packaged as a holochain zome, and an npm package that offers native Web Components that can be used across browsers and frameworks.
 
+Watch the (temporary) [Demo](https://www.youtube.com/watch?v=EcsBTIxUA0o).
+
 ## Dependencies
 
 - [Profiles zome](https://github.com/holochain-open-dev/profiles)
