@@ -1,5 +1,5 @@
 use hc_utils::{WrappedAgentPubKey, WrappedEntryHash};
-use hdk3::prelude::*;
+use hdk::prelude::*;
 use transaction::Transaction;
 
 use crate::{
@@ -114,21 +114,9 @@ fn internal_create_offer(offer: &Offer) -> ExternResult<WrappedEntryHash> {
     Ok(WrappedEntryHash(offer_hash))
 }
 
-fn offer_entry_type() -> ExternResult<AppEntryType> {
-    let defs = crate::defs();
-    let entry_def_position = defs
-        .entry_def_id_position(EntryDefId::App("offer".into()))
-        .unwrap() as u8;
-    Ok(AppEntryType::new(
-        entry_def_index!(Offer),
-        zome_info()?.zome_id,
-        EntryVisibility::Private,
-    ))
-}
-
 fn query_all_offers() -> ExternResult<Vec<Element>> {
     let offer_entry_type = EntryType::App(AppEntryType::new(
-        entry_def_index!(Offer),
+        entry_def_index!(Offer)?,
         zome_info()?.zome_id,
         EntryVisibility::Private,
     ));

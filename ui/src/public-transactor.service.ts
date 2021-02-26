@@ -9,10 +9,6 @@ export class PublicTransactorService {
     public zomeName = 'transactor'
   ) {}
 
-  async getMyPublicKey(): Promise<string> {
-    return this.callZome('who_am_i', null);
-  }
-
   async getAgentBalance(agentPubKey: string): Promise<number> {
     return this.callZome('get_balance_for_agent', agentPubKey);
   }
