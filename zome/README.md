@@ -4,21 +4,18 @@ This folder has an example DNA for the `transactor` zome. The actual code for th
 
 To change the code, you can work either opening VSCode inside the root folder of the repo or in this folder, you should have rust intellisense either way.
 
-## Requirements
-
-- Having [`nix-shell` installed](https://developer.holochain.org/docs/install/).
-- Have [`holochain-run-dna`](https://www.npmjs.com/package/@holochain-open-dev/holochain-run-dna) installed globally, and the `lair-keystore` described in its README as well.
+All the instructions here assume you are running them inside the nix-shell at the root of the repository. For more info, see the [developer setup](/dev-setup.md).
 
 ## Building
 
 ```bash
-CARGO_TARGET_DIR=target cargo build --release --target wasm32-unknown-unknown
-dna-util -c transactor.dna.workdir/
+CARGO_TARGET=target cargo build --release --target wasm32-unknown-unknown
+hc dna pack transactor.dna.workdir
 ```
 
-## Testing
+This should create a `transactor.dna.workdir/transactor-test.dna` file.
 
-> Note: tests are not implemented yet.
+## Testing
 
 After having built the DNA:
 
@@ -33,9 +30,9 @@ npm test
 After having built the DNA:
 
 ```bash
-holochain-run-dna transactor.dna.gz
+hc s call register-dna --path zome/transactor.dna.workdir/transactor-test.dna
+hc s call install-app <RESULT_HASH_OF_PREVIOUS_COMMAND>
+hc s run
 ```
 
 Now `holochain` will be listening at port `8888`;
-
-Restart the command if it fails (flaky holochain start).

@@ -2,9 +2,15 @@
 
 UI module for the `transactor` zome.
 
-## Local Demo with `@web/dev-server`
+All the instructions here assume you are running them inside the nix-shell at the root of the repository. For more info, see the [developer setup](/dev-setup.md).
 
-First, [build the holochain dna](/zomes/README.md). 
+## Setup
+
+```bash
+npm install
+```
+
+## Running
 
 To run the alice player:
 
