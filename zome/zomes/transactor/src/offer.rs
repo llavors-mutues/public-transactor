@@ -1,5 +1,5 @@
 use hc_utils::{WrappedAgentPubKey, WrappedEntryHash};
-use hdk3::prelude::*;
+use hdk::prelude::*;
 use transaction::Transaction;
 
 use crate::{
@@ -132,7 +132,7 @@ fn query_all_offers() -> ExternResult<Vec<Element>> {
         .include_entries(true);
     let query_result = query(filter)?;
 
-    Ok(query_result.0)
+    Ok(query_result)
 }
 
 fn internal_query_offer(offer_hash: EntryHash) -> ExternResult<Option<Offer>> {

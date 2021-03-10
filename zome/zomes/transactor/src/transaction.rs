@@ -1,6 +1,6 @@
 use hc_utils::{WrappedAgentPubKey, WrappedEntryHash};
 use hdk3::prelude::timestamp::Timestamp;
-use hdk3::prelude::*;
+use hdk::prelude::*;
 
 use crate::{
     offer::Offer,

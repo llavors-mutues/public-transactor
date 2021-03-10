@@ -34,7 +34,7 @@ transactor = {git = "https://github.com/llavors-mutues/public-transactor", packa
 extern crate transactor;
 ```
 
-6. Add the zome into your `*.dna.workdir/dna.json` file.
+6. Add the zome into your `*.dna.workdir/dna.yaml` file.
 7. Compile the DNA with the usual `CARGO_TARGET=target cargo build --release --target wasm32-unknown-unknown`.
 
 ### Using the UI module
