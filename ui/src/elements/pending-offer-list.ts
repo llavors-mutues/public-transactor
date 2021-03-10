@@ -6,7 +6,8 @@ import { CircularProgress } from 'scoped-material-components/mwc-circular-progre
 
 import { Offer } from '../types';
 import { sharedStyles } from './utils/shared-styles';
-import { Hashed, StoreElement } from '@holochain-open-dev/common';
+import { StoreElement } from '@holochain-open-dev/common';
+import { HoloHashed } from '@holochain-open-dev/core-types';
 import { Icon } from 'scoped-material-components/mwc-icon';
 import { TransactorStore } from '../transactor.store';
 
@@ -54,7 +55,7 @@ export abstract class PendingOfferList extends StoreElement<TransactorStore> {
     this._lastSelectedOfferHash = offerHash;
   }
 
-  renderOfferList(title: string, offers: Array<Hashed<Offer>>) {
+  renderOfferList(title: string, offers: Array<HoloHashed<Offer>>) {
     return html`<div class="column">
       <span class="title">${title} offers</span>
 

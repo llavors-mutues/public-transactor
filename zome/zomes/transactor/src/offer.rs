@@ -114,21 +114,14 @@ fn internal_create_offer(offer: &Offer) -> ExternResult<WrappedEntryHash> {
     Ok(WrappedEntryHash(offer_hash))
 }
 
-fn offer_entry_type() -> ExternResult<AppEntryType> {
-    let defs = crate::defs();
-    let entry_def_position = defs
-        .entry_def_id_position(EntryDefId::App("offer".into()))
-        .unwrap() as u8;
-    Ok(AppEntryType::new(
-        entry_def_position.into(),
+fn query_all_offers() -> ExternResult<Vec<Element>> {
+    let offer_entry_type = EntryType::App(AppEntryType::new(
+        entry_def_index!(Offer)?,
         zome_info()?.zome_id,
         EntryVisibility::Private,
-    ))
-}
-
-fn query_all_offers() -> ExternResult<Vec<Element>> {
+    ));
     let filter = ChainQueryFilter::new()
-        .entry_type(EntryType::App(offer_entry_type()?))
+        .entry_type(offer_entry_type)
         .include_entries(true);
     let query_result = query(filter)?;
 

@@ -1,4 +1,4 @@
-import { Hashed, timestampToMillis } from '@holochain-open-dev/common';
+import { HoloHashed, timestampToMillis } from '@holochain-open-dev/core-types';
 import { AppWebsocket, CellId } from '@holochain/conductor-api';
 import { Offer, Transaction } from './types';
 
@@ -19,7 +19,7 @@ export class PublicTransactorService {
 
   async getAgentTransactions(
     agentPubKey: string
-  ): Promise<Array<Hashed<Transaction>>> {
+  ): Promise<Array<HoloHashed<Transaction>>> {
     const transactions = await this.callZome(
       'get_transactions_for_agent',
       agentPubKey
@@ -33,7 +33,7 @@ export class PublicTransactorService {
     }));
   }
 
-  async queryMyPendingOffers(): Promise<Array<Hashed<Offer>>> {
+  async queryMyPendingOffers(): Promise<Array<HoloHashed<Offer>>> {
     return this.callZome('query_my_pending_offers', null);
   }
 

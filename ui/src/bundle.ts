@@ -1,6 +1,5 @@
 import { Lenses } from '@compository/lib';
 import { AppWebsocket, CellId } from '@holochain/conductor-api';
-import { TransactionList } from './elements/transaction-list';
 import { CreateOffer } from './elements/create-offer';
 import { Constructor } from 'lit-element';
 //@ts-ignore

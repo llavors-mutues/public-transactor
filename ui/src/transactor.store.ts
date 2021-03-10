@@ -1,5 +1,5 @@
 import { Dictionary } from '@compository/lib';
-import { Hashed, serializeHash } from '@holochain-open-dev/common';
+import { HoloHashed, serializeHash } from '@holochain-open-dev/core-types';
 import { ProfilesStore } from '@holochain-open-dev/profiles/profiles.store';
 import {
   observable,
@@ -29,7 +29,7 @@ export class TransactorStore {
   }
 
   @computed
-  get myPendingOffers(): Hashed<Offer>[] {
+  get myPendingOffers(): HoloHashed<Offer>[] {
     return Object.entries(this.offers)
       .filter(
         ([hash, offer]) =>
@@ -42,7 +42,7 @@ export class TransactorStore {
   }
 
   @computed
-  get myTransactions(): Hashed<Transaction>[] {
+  get myTransactions(): HoloHashed<Transaction>[] {
     return Object.entries(this.transactions)
       .sort(
         ([_, transaction1], [__, transaction2]) =>
@@ -75,12 +75,12 @@ export class TransactorStore {
   }
 
   @computed
-  get outgoingOffers(): Array<Hashed<Offer>> {
+  get outgoingOffers(): Array<HoloHashed<Offer>> {
     return this.myPendingOffers.filter(offer => this.isOutgoing(offer.content));
   }
 
   @computed
-  get incomingOffers(): Array<Hashed<Offer>> {
+  get incomingOffers(): Array<HoloHashed<Offer>> {
     return this.myPendingOffers.filter(
       offer => !this.isOutgoing(offer.content)
     );
@@ -140,11 +140,11 @@ export class TransactorStore {
   }
 
   @action
-  public storeOffer(offer: Hashed<Offer>) {
+  public storeOffer(offer: HoloHashed<Offer>) {
     this.offers[offer.hash] = offer.content;
   }
   @action
-  public storeTransaction(transaction: Hashed<Transaction>) {
+  public storeTransaction(transaction: HoloHashed<Transaction>) {
     this.transactions[transaction.hash] = transaction.content;
   }
 }

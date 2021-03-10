@@ -1,5 +1,5 @@
 import { LitElement, property, html, PropertyValues } from 'lit-element';
-import { Hashed, StoreElement } from '@holochain-open-dev/common';
+import { StoreElement } from '@holochain-open-dev/common';
 
 import { List } from 'scoped-material-components/mwc-list';
 import { CircularProgress } from 'scoped-material-components/mwc-circular-progress';

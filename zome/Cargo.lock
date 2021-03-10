@@ -422,7 +422,7 @@ dependencies = [
 [[package]]
 name = "profiles"
 version = "0.0.1"
-source = "git+https://github.com/holochain-open-dev/profiles?branch=main#b7ded491044876d64566ad12454ebed88b11ebba"
+source = "git+https://github.com/holochain-open-dev/profiles?branch=main#b49442254b9de4d9e120457e75334458fdbd51d9"
 dependencies = [
  "derive_more",
  "hc_utils",
