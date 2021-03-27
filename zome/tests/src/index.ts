@@ -10,9 +10,9 @@ import path from "path";
 const conductorConfig = Config.gen({});
 
 // Construct proper paths for your DNAs
-const calendarEvents = path.join(__dirname, "../../transactor.dna.gz");
+const calendarEvents = path.join(__dirname, "../../workdir/dna/transactor-test.dna");
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(() => resolve(), ms));
+const sleep = (ms) => new Promise((resolve) => setTimeout(() => resolve(null), ms));
 
 const orchestrator = new Orchestrator();
 
