@@ -354,6 +354,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "offering"
+version = "0.0.1"
+dependencies = [
+ "derive_more",
+ "hc_utils",
+ "hdk",
+ "serde",
+]
+
+[[package]]
 name = "once_cell"
 version = "1.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"

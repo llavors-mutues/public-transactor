@@ -2,6 +2,7 @@
 members = [
   "zomes/transactor",
   "zomes/profiles",
+  "zomes/offering"
 ]
 
 [profile.dev]
