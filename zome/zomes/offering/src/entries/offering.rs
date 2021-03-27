@@ -1,3 +1,6 @@
+use hdk::prelude::*;
+
+
 
 #[hdk_entry(id = "offering", visibility = "public")]
 #[derive(Clone)]
@@ -27,7 +30,7 @@ pub struct AllOffersResultDTO{
 
 
 impl Offering{
-    pub fn new()->Self{
-        /// todo
-    }
+    // pub fn new()->Self{
+    //     // todo
+    // }
 }
