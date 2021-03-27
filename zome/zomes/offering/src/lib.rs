@@ -2,7 +2,7 @@ use hdk::prelude::*;
 mod entries;
 mod all_offerings_anchor;
 
-use all_offerings_anchor::OfferingPath;
+use all_offerings_anchor::ALL_OFFER_ANCHOR;
 
 use entries::offering::{
 
@@ -16,9 +16,8 @@ pub fn err(reason: &str) -> WasmError {
 }
 
 entry_defs![
-    Path::entry_def(), // define path
-    entries::offering::Offering::entry_def() // define offering entry
-    //entires::   // define anchor 
+    Path::entry_def(), 
+    entries::offering::Offering::entry_def()    
 ]; 
 
 // TODO
@@ -39,7 +38,7 @@ fn create_offering(input:OfferingDTO) -> ExternResult<HeaderHash>{
     let offering_entry_hash: EntryHash = hash_entry(offering_entry)?;
 
     // create link from all_offerings_anchor->new_entry
-    let all_offerings_path_entry_hash: EntryHash = getAllOfferingPathEntryHash()?;
+    let all_offerings_path_entry_hash: EntryHash = get_all_offering_path_entry_hash()?;
 
     create_link(
         all_offerings_path_entry_hash,
@@ -52,7 +51,7 @@ fn create_offering(input:OfferingDTO) -> ExternResult<HeaderHash>{
 #[hdk_extern]
 fn get_all_offerings(_:())-> ExternResult<()>{ //entries::offering::AllOffersResultDTO
 
-    let all_offerings_path_entry_hash: EntryHash = getAllOfferingPathEntryHash()?;
+    let all_offerings_path_entry_hash: EntryHash = get_all_offering_path_entry_hash()?;
     
     // query all entries based on all_offerings_anchor
     let linked_offerings: Vec<Link> = get_links(all_offerings_path_entry_hash, Some(LinkTag::new("offering")))?.into_inner();
@@ -70,9 +69,9 @@ fn get_all_offerings(_:())-> ExternResult<()>{ //entries::offering::AllOffersRes
 
 //helper function 
 
-pub fn getAllOfferingPathEntryHash()->ExternResult<EntryHash>{
+pub fn get_all_offering_path_entry_hash()->ExternResult<EntryHash>{
 
-    let all_offerings_path:Path = Path::from(OfferingPath);
+    let all_offerings_path:Path = Path::from(ALL_OFFER_ANCHOR);
     all_offerings_path.ensure()?;
     let all_offerings_path_entry_hash: EntryHash = all_offerings_path.hash()?;
 
