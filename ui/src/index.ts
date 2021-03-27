@@ -7,3 +7,7 @@ export * from './elements/my-balance';
 export * from './elements/transaction-list';
 export * from './public-transactor.service';
 export * from './transactor.store';
+
+export * from './offerings/elements/create-offering';
+export * from './offerings/elements/offering-list';
+export * from './offerings/offerings.service';

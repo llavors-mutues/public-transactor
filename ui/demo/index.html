@@ -21,6 +21,12 @@
     <profile-prompt>
       <div style="display: flex; flex-direction: column; flex: 1">
         <div style="display: flex; flex-direction: row; flex: 1">
+          <create-offering
+            style="display: flex; flex: 1; margin: 16px"
+          ></create-offering>
+          <offerings-list
+            style="display: flex; flex: 1; margin: 16px"
+          ></offerings-list>
           <create-offer
             style="display: flex; flex: 1; margin: 16px"
           ></create-offer>
@@ -39,6 +45,9 @@
         MyBalance,
         PublicTransactorService,
         TransactorStore,
+        CreateOffering,
+        OfferingList,
+        OfferingsService,
       } from '../dist';
       import { connectDeps } from '@holochain-open-dev/common';
       import {
@@ -72,15 +81,27 @@
         const profilesService = new ProfilesService(appWebsocket, cellId);
         const profilesStore = new ProfilesStore(profilesService);
         const service = new PublicTransactorService(appWebsocket, cellId);
+        const offeringsService = new OfferingsService(appWebsocket, cellId);
         store = new TransactorStore(service, profilesStore);
 
         customElements.define(
           'profile-prompt',
           connectDeps(ProfilePrompt, profilesStore)
         );
-        customElements.define('create-offer', connectDeps(CreateOffer, {store}));
-        customElements.define('my-offers', connectDeps(MyOffers, {store}));
-        customElements.define('my-balance', connectDeps(MyBalance, {store}));
+        customElements.define(
+          'create-offer',
+          connectDeps(CreateOffer, { store })
+        );
+        customElements.define('my-offers', connectDeps(MyOffers, { store }));
+        customElements.define('my-balance', connectDeps(MyBalance, { store }));
+        customElements.define(
+          'create-offering',
+          connectDeps(CreateOffering, { store, offeringsService })
+        );
+        customElements.define(
+          'offering-list',
+          connectDeps(OfferingList, { store, offeringsService })
+        );
       })();
     </script>
   </body>
