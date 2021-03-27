@@ -5,6 +5,6 @@ uuid: 00000000-0000-0000-0000-000000000000
 properties: ~
 zomes:
   - name: transactor
-    bundled: ../target/wasm32-unknown-unknown/release/transactor.wasm
+    bundled: ../../target/wasm32-unknown-unknown/release/transactor.wasm
   - name: profiles
-    bundled: ../target/wasm32-unknown-unknown/release/profiles.wasm
+    bundled: ../../target/wasm32-unknown-unknown/release/profiles.wasm

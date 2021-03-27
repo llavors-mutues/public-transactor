@@ -10,10 +10,11 @@ All the instructions here assume you are running them inside the nix-shell at th
 
 ```bash
 CARGO_TARGET=target cargo build --release --target wasm32-unknown-unknown
-hc dna pack transactor.dna.workdir
+hc dna pack workdir/dna
+hc app pack workdir/happ
 ```
 
-This should create a `transactor.dna.workdir/transactor-test.dna` file.
+This should create a `workdir/happ/transactor-happ.happ` file.
 
 ## Testing
 
@@ -30,9 +31,7 @@ npm test
 After having built the DNA:
 
 ```bash
-hc s call register-dna --path zome/transactor.dna.workdir/transactor-test.dna
-hc s call install-app <RESULT_HASH_OF_PREVIOUS_COMMAND>
-hc s run
+hc s generate workdir/happ/transactor-happ.happ --run=8888
 ```
 
 Now `holochain` will be listening at port `8888`;

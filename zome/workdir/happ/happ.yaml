@@ -1,0 +1,15 @@
+---
+manifest_version: "1"
+name: transactor-happ
+description: ~
+slots:
+  - id: sample-slot
+    provisioning:
+      strategy: create
+      deferred: false
+    dna:
+      bundled: "../dna/transactor-test.dna"
+      properties: ~
+      uuid: ~
+      version: ~
+      clone_limit: 0
