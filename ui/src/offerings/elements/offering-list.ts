@@ -59,7 +59,7 @@ export abstract class OfferingList extends DepsElement<OfferingDeps> {
       <mwc-list style="width: 100%;">
         ${this._offeringsFromOthers.map(
           ([offeringHash, offering], i) => html`
-            <div class="row" style="flex: 1;">
+            <div class="row center-content" style="flex: 1;">
               <mwc-list-item
                 twoline
                 style="flex: 1;"
@@ -69,11 +69,11 @@ export abstract class OfferingList extends DepsElement<OfferingDeps> {
                 <span slot="secondary">
                   ${this.deps.store.profilesStore.profileOf(
                     offering.author_address
-                  )}
+                  ).nickname}
                 </span>
               </mwc-list-item>
 
-              <span style="width: 30px">
+              <span style="margin-right: 24px;">
                 ${Math.round(offering.amount * 100) / 100} credits
               </span>
             </div>
@@ -100,43 +100,48 @@ export abstract class OfferingList extends DepsElement<OfferingDeps> {
     return html`
       <mwc-card style="width: auto; flex: 1;">
         <div class="row" style="flex: 1;">
-          ${this.renderOfferingsList()}
+          <div style="flex: 1;">${this.renderOfferingsList()}</div>
           <span class="vertical-divider"></span>
-          ${this._selectedOffering
-            ? html`
-                <div class="column">
-                  <span class="item"
-                    >Title: ${this._selectedOffering.title}</span
+          <div class="fill column">
+            ${this._selectedOffering
+              ? html`
+                  <div class="column padding fill">
+                    <span class="item"
+                      >Title: ${this._selectedOffering.title}</span
+                    >
+                    <span class="item"
+                      >Description: ${this._selectedOffering.description}</span
+                    >
+                    <span class="item"
+                      >By
+                      ${this.deps.store.profilesStore.profileOf(
+                        this._selectedOffering.author_address
+                      ).nickname}
+                    </span>
+                    <span style="flex: 1;">
+                      Agent ID:
+                      ${this._selectedOffering.author_address.substring(0, 15)}
+                    </span>
+                    <mwc-button
+                      raised
+                      label="TAKE"
+                      @click=${() => {
+                        console.log(this._selectedOffering);
+                        this.deps.store.createOffer(
+                          this._selectedOffering?.author_address as string,
+                          this._selectedOffering?.amount as number
+                        );
+                      }}
+                    >
+                    </mwc-button>
+                  </div>
+                `
+              : html` <div class="fill center-content">
+                  <span class="placeholder" style="margin: 16px;"
+                    >Select an offering to see its details</span
                   >
-                  <span class="item"
-                    >Description: ${this._selectedOffering.description}</span
-                  >
-                  <span class="item"
-                    >By
-                    ${this.deps.store.profilesStore.profileOf(
-                      this._selectedOffering.author_address
-                    ).nickname},
-                    Agend ID: ${this._selectedOffering.author_address}
-                  </span>
-                  <mwc-button
-                    raised
-                    label="TAKE"
-                    @click=${() => {
-                      console.log(this._selectedOffering);
-                      this.deps.store.createOffer(
-                        this._selectedOffering?.author_address as string,
-                        this._selectedOffering?.amount as number
-                      );
-                    }}
-                  >
-                  </mwc-button>
-                </div>
-              `
-            : html`<div class="fill center-content">
-                <span class="placeholder" style="margin: 16px;"
-                  >Select an offering to see its details</span
-                >
-              </div>`}
+                </div>`}
+          </div>
         </div>
       </mwc-card>
     `;
