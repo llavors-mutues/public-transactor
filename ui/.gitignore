@@ -19,5 +19,6 @@
 /_site/
 dist/
 bundle/
+bundle-offerings/
 /out-tsc/
 /storybook-static/

@@ -15,9 +15,8 @@ pub fn err(reason: &str) -> WasmError {
 }
 
 entry_defs![
-    Path::entry_def(), // define path
-    entries::offering::Offering::entry_def() // define offering entry
-    //entires::   // define anchor 
+    Path::entry_def(), 
+    entries::offering::Offering::entry_def()    
 ]; 
 
 // TODO

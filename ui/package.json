@@ -14,6 +14,7 @@
     "start-bob": "CONDUCTOR_URL=ws://localhost:8889 concurrently -k --names tsc,dev-server \"npm run build-watch\" \"web-dev-server --config demo/web-dev-server.config.mjs --port 8081\" \"hc s generate ../zome/workdir/happ/transactor-happ.happ -r=8889 network -b https://bootstrap-staging.holo.host quic\"",
     "build": "rimraf dist && tsc",
     "build-bundle": "rimraf dist && rollup -c rollup-bundle.config.js",
+    "build-offerings": "rimraf dist && rollup -c rollup-offerings.config.js",
     "build-watch": "tsc --watch",
     "test": "tsc && web-test-runner --coverage",
     "test-debug": "tsc && DEBUG=true web-test-runner --coverage",
