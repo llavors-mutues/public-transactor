@@ -23,14 +23,21 @@ pub struct OfferingDTO {
 #[derive(Clone, Serialize, Deserialize, Debug, SerializedBytes)]
 #[serde(rename_all = "camelCase")]
 pub struct AllOffersResultDTO{
-    offer_address:EntryHash,
-    amount:u32,
-    author_address:AgentPubKey,
+    pub offer_address:EntryHash,
+    pub amount:u32,
+    pub author_address:AgentPubKey,
  }
 
 
 impl Offering{
-    // pub fn new()->Self{
-    //     // todo
-    // }
+
+    pub fn get_author(&self)->AgentPubKey{
+        self.author_address.clone()
+    }
+    pub fn get_amount(&self)-> u32{
+        self.amount.clone()
+    }
+    pub fn get_entry_hash(&self)->ExternResult<EntryHash>{
+        hash_entry(self.clone())
+    }
 }

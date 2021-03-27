@@ -1,1 +1,1 @@
-pub const OfferingPath: &'static str = "all_offers";
+pub const OFFERING_PATH: &'static str = "all_offers";
