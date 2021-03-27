@@ -358,8 +358,8 @@ name = "offering"
 version = "0.0.1"
 dependencies = [
  "derive_more",
- "hc_utils",
  "hdk",
+ "holo_hash",
  "serde",
 ]
 

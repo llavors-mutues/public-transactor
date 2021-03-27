@@ -24,9 +24,11 @@
           <create-offering
             style="display: flex; flex: 1; margin: 16px"
           ></create-offering>
-          <offerings-list
+          <offering-list
             style="display: flex; flex: 1; margin: 16px"
-          ></offerings-list>
+          ></offering-list>
+        </div>
+        <div style="display: flex; flex-direction: row; flex: 1">
           <create-offer
             style="display: flex; flex: 1; margin: 16px"
           ></create-offer>
@@ -81,7 +83,7 @@
         const profilesService = new ProfilesService(appWebsocket, cellId);
         const profilesStore = new ProfilesStore(profilesService);
         const service = new PublicTransactorService(appWebsocket, cellId);
-        const offeringsService = new OfferingsService(appWebsocket, cellId);
+        const offeringService = new OfferingsService(appWebsocket, cellId);
         store = new TransactorStore(service, profilesStore);
 
         customElements.define(
@@ -96,11 +98,11 @@
         customElements.define('my-balance', connectDeps(MyBalance, { store }));
         customElements.define(
           'create-offering',
-          connectDeps(CreateOffering, { store, offeringsService })
+          connectDeps(CreateOffering, { store, offeringService })
         );
         customElements.define(
           'offering-list',
-          connectDeps(OfferingList, { store, offeringsService })
+          connectDeps(OfferingList, { store, offeringService })
         );
       })();
     </script>

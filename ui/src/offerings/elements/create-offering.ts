@@ -13,33 +13,26 @@ import { OfferingDeps } from '../types';
 export abstract class CreateOffering extends DepsElement<OfferingDeps> {
   /** Private properties */
 
-  @query('#title')
-  _titleField!: TextField;
-  @query('#description')
-  _descriptionField!: TextField;
-  @query('#amount')
-  _amountField!: TextField;
+  @property()
+  _title!: string;
+  @property()
+  _description!: string;
+  @property()
+  _amount!: string;
 
   static styles = sharedStyles;
 
   get _createEnabled() {
-    return (
-      this._titleField &&
-      this._titleField.value &&
-      this._descriptionField &&
-      this._descriptionField.value &&
-      this._amountField &&
-      this._amountField.value
-    );
+    return this._title && this._description && this._amount;
   }
 
   async createOffering() {
-    const amount = parseFloat(this._amountField.value);
+    const amount = parseFloat(this._amount);
 
     await this.deps.offeringService.createOffering({
       amount,
-      title: this._titleField.value,
-      description: this._descriptionField.value,
+      title: this._title,
+      description: this._description,
     });
   }
 
@@ -57,6 +50,9 @@ export abstract class CreateOffering extends DepsElement<OfferingDeps> {
             id="title"
             required
             outlined
+            @input=${(e: CustomEvent) => {
+              this._title = (e.target as any)?.value as any;
+            }}
           ></mwc-textfield>
 
           <mwc-textfield
@@ -65,6 +61,9 @@ export abstract class CreateOffering extends DepsElement<OfferingDeps> {
             id="description"
             required
             outlined
+            @input=${(e: CustomEvent) => {
+              this._description = (e.target as any)?.value as any;
+            }}
           ></mwc-textfield>
 
           <mwc-textfield
@@ -74,13 +73,19 @@ export abstract class CreateOffering extends DepsElement<OfferingDeps> {
             id="amount"
             min="0.1"
             step="0.1"
+            required
             autoValidate
             outlined
+            @input=${(e: CustomEvent) => {
+              this._amount = (e.target as any)?.value as any;
+            }}
           ></mwc-textfield>
 
           <mwc-button
+            raised
             label="CREATE OFFERING"
             .disabled=${!this._createEnabled}
+            @click=${() => this.createOffering()}
           ></mwc-button>
         </div>
       </mwc-card>

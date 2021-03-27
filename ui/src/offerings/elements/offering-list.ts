@@ -10,6 +10,7 @@ import { Offering, OfferingDeps } from '../types';
 import { Dictionary } from '@compository/lib';
 import { sharedStyles } from '../../elements/utils/shared-styles';
 import { Button } from 'scoped-material-components/mwc-button';
+import { Card } from 'scoped-material-components/mwc-card';
 
 export abstract class OfferingList extends DepsElement<OfferingDeps> {
   /** Public attributes */
@@ -29,7 +30,7 @@ export abstract class OfferingList extends DepsElement<OfferingDeps> {
 
   async firstUpdated() {
     this._offerings = await this.deps.offeringService.getAllOfferings();
-
+    console.log(this._offerings);
     await this.deps.store.profilesStore.fetchAllProfiles();
 
     this._loading = false;
@@ -41,37 +42,41 @@ export abstract class OfferingList extends DepsElement<OfferingDeps> {
       : undefined;
   }
 
+  get _offeringsFromOthers(): Array<[string, Offering]> {
+    return this._offerings
+      ? Object.entries(this._offerings).filter(
+          ([_, o]) => o.author_address !== this.deps.store.myAgentPubKey
+        )
+      : [];
+  }
+
   renderOfferingsList() {
-    if (Object.keys(this._offerings).length === 0)
+    if (this._offeringsFromOthers.length === 0)
       return html`<div class="padding">
         <span class="placeholder">There are no offerings yet</span>
       </div>`;
 
     return html`
       <mwc-list style="width: 100%;">
-        ${Object.entries(this._offerings).map(
+        ${this._offeringsFromOthers.map(
           ([offeringHash, offering], i) => html`
-            <div class="row" style="align-items: center;">
-              <mwc-list-item
-                twoline
-                noninteractive
-                graphic="avatar"
-                style="flex: 1;"
-                @click=${() => (this._selectedOfferingHash = offeringHash)}
-              >
-                <span> ${offering.title} </span>
-                <span slot="secondary">
-                  ${this.deps.store.profilesStore.profileOf(
-                    offering.author_address
-                  )}
-                </span>
-              </mwc-list-item>
-
-              <span style="font-size: 20px; margin: 0 24px;">
-                ${offering.amount} credits
+            <mwc-list-item
+              twoline
+              style="flex: 1;"
+              @click=${() => (this._selectedOfferingHash = offeringHash)}
+            >
+              <span> ${offering.title} </span>
+              <span slot="secondary">
+                ${this.deps.store.profilesStore.profileOf(
+                  offering.author_address
+                )}
               </span>
-            </div>
-            ${i < Object.entries(this._offerings).length - 1
+            </mwc-list-item>
+            <!-- 
+              <span style="width: 30px">
+                ${Math.round(offering.amount * 100) / 100} credits
+              </span> -->
+            ${i < this._offeringsFromOthers.length - 1
               ? html`<li divider padded role="separator"></li> `
               : html``}
           `
@@ -99,21 +104,24 @@ export abstract class OfferingList extends DepsElement<OfferingDeps> {
           ${this._selectedOffering
             ? html`
                 <div class="column">
-                  <span class="item">${this._selectedOffering.title}</span>
                   <span class="item"
-                    >${this._selectedOffering.description}</span
+                    >Title: ${this._selectedOffering.title}</span
+                  >
+                  <span class="item"
+                    >Description: ${this._selectedOffering.description}</span
                   >
                   <span class="item"
                     >By
                     ${this.deps.store.profilesStore.profileOf(
                       this._selectedOffering.author_address
-                    )},
+                    ).nickname},
                     Agend ID: ${this._selectedOffering.author_address}
                   </span>
                   <mwc-button
                     raised
                     label="TAKE"
                     @click=${() => {
+                      console.log(this._selectedOffering);
                       this.deps.store.createOffer(
                         this._selectedOffering?.author_address as string,
                         this._selectedOffering?.amount as number
@@ -145,6 +153,7 @@ export abstract class OfferingList extends DepsElement<OfferingDeps> {
       'mwc-button': Button,
       'mwc-list-item': ListItem,
       'mwc-list': List,
+      'mwc-card': Card,
     };
   }
 }

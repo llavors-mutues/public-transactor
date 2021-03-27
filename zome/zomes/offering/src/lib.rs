@@ -1,13 +1,14 @@
 use hdk::prelude::*;
 mod entries;
 mod all_offerings_anchor;
+use holo_hash::EntryHashB64;
+use holo_hash::AgentPubKeyB64;
 
 use all_offerings_anchor::OFFERING_PATH;
 
 use entries::offering::{
     Offering,
-    OfferingDTO,
-    AllOffersResultDTO
+    OfferingDTO
 };
 
 pub fn err(reason: &str) -> WasmError {
@@ -29,7 +30,7 @@ fn create_offering(input:OfferingDTO) -> ExternResult<HeaderHash>{
         title: input.title,
         description: input.description,
         amount: input.amount,
-        author_address: agent_info()?.agent_latest_pubkey,
+        author_address: AgentPubKeyB64::from(agent_info()?.agent_latest_pubkey),
     };
     
     // create new entry
@@ -48,18 +49,18 @@ fn create_offering(input:OfferingDTO) -> ExternResult<HeaderHash>{
     Ok(offering_header_hash)
 }
 #[hdk_extern]
-fn get_all_offerings(_:())-> ExternResult<Vec<AllOffersResultDTO>>{ //entries::offering::AllOffersResultDTO
+fn get_all_offerings(_:())-> ExternResult<Vec<(EntryHashB64, Offering)>>{ //entries::offering::AllOffersResultDTO
 
     let all_offerings_path_entry_hash: EntryHash = get_all_offering_path_entryhash()?;
 
-    let mut all_offerings_entries: Vec<AllOffersResultDTO> = Vec::new(); 
+    let mut all_offerings_entries: Vec<(EntryHashB64, Offering)> = Vec::new(); 
     
     // query all entries based on all_offerings_anchor
     let linked_offerings: Vec<Link> = get_links(all_offerings_path_entry_hash, Some(LinkTag::new("offering")))?.into_inner();
 
     for link in linked_offerings.into_iter(){
 
-        match get(link.target, GetOptions::content())?{
+        match get(link.target.clone(), GetOptions::content())?{
 
             Some(element) =>{
 
@@ -69,14 +70,8 @@ fn get_all_offerings(_:())-> ExternResult<Vec<AllOffersResultDTO>>{ //entries::o
 
                     Some(offering_entry)=> {
 
-                        let _offer_dto = AllOffersResultDTO{
-                            
-                            offer_address: offering_entry.get_entry_hash()?,
-                            amount: offering_entry.get_amount(),
-                            author_address: offering_entry.get_author()
-                        };
 
-                        all_offerings_entries.push(_offer_dto);
+                        all_offerings_entries.push((EntryHashB64::from(link.target), offering_entry));
                     },
                     None =>{},
                 }
