@@ -1,3 +1,5 @@
+import { TransactorStore } from "./transactor.store";
+
 export interface Multiparty {
   spender_pub_key: string;
   recipient_pub_key: string;
@@ -21,3 +23,7 @@ export interface Offer extends Multiparty {
 
   state: OfferState;
 }
+
+export type TransactorDeps = {
+  store: TransactorStore;
+};

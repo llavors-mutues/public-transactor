@@ -40,7 +40,7 @@
         PublicTransactorService,
         TransactorStore,
       } from '../dist';
-      import { connectStore } from '@holochain-open-dev/common';
+      import { connectDeps } from '@holochain-open-dev/common';
       import {
         ProfilePrompt,
         ProfilesStore,
@@ -76,11 +76,11 @@
 
         customElements.define(
           'profile-prompt',
-          connectStore(ProfilePrompt, profilesStore)
+          connectDeps(ProfilePrompt, profilesStore)
         );
-        customElements.define('create-offer', connectStore(CreateOffer, store));
-        customElements.define('my-offers', connectStore(MyOffers, store));
-        customElements.define('my-balance', connectStore(MyBalance, store));
+        customElements.define('create-offer', connectDeps(CreateOffer, {store}));
+        customElements.define('my-offers', connectDeps(MyOffers, {store}));
+        customElements.define('my-balance', connectDeps(MyBalance, {store}));
       })();
     </script>
   </body>

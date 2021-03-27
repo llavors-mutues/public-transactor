@@ -9,7 +9,7 @@ import { PublicTransactorService } from './public-transactor.service';
 import { MyOffers } from './elements/my-offers';
 import { ProfilesService } from '@holochain-open-dev/profiles';
 import { ProfilesStore } from '@holochain-open-dev/profiles/profiles.store';
-import { connectStore } from '@holochain-open-dev/common';
+import { connectDeps } from '@holochain-open-dev/common';
 import { MyBalance } from './elements/my-balance';
 
 function renderUnique(
@@ -61,17 +61,13 @@ export default function lenses(
       {
         name: 'My Offers',
         render(root: ShadowRoot) {
-          renderUnique('my-offers', connectStore(MyOffers, store), root);
+          renderUnique('my-offers', connectDeps(MyOffers, { store }), root);
         },
       },
       {
         name: 'My Balance',
         render(root: ShadowRoot) {
-          renderUnique(
-            'my-balance',
-            connectStore(MyBalance, store),
-            root
-          );
+          renderUnique('my-balance', connectDeps(MyBalance, { store }), root);
         },
       },
       {
@@ -79,7 +75,7 @@ export default function lenses(
         render(root: ShadowRoot) {
           renderUnique(
             'create-offer',
-            connectStore(CreateOffer, store),
+            connectDeps(CreateOffer, { store }),
             root
           );
         },
