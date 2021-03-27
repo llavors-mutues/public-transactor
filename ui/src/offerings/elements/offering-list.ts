@@ -30,7 +30,6 @@ export abstract class OfferingList extends DepsElement<OfferingDeps> {
 
   async firstUpdated() {
     this._offerings = await this.deps.offeringService.getAllOfferings();
-    console.log(this._offerings);
     await this.deps.store.profilesStore.fetchAllProfiles();
 
     this._loading = false;
@@ -52,7 +51,7 @@ export abstract class OfferingList extends DepsElement<OfferingDeps> {
 
   renderOfferingsList() {
     if (this._offeringsFromOthers.length === 0)
-      return html`<div class="padding">
+      return html`<div class="padding center-content">
         <span class="placeholder">There are no offerings yet</span>
       </div>`;
 
@@ -60,22 +59,24 @@ export abstract class OfferingList extends DepsElement<OfferingDeps> {
       <mwc-list style="width: 100%;">
         ${this._offeringsFromOthers.map(
           ([offeringHash, offering], i) => html`
-            <mwc-list-item
-              twoline
-              style="flex: 1;"
-              @click=${() => (this._selectedOfferingHash = offeringHash)}
-            >
-              <span> ${offering.title} </span>
-              <span slot="secondary">
-                ${this.deps.store.profilesStore.profileOf(
-                  offering.author_address
-                )}
-              </span>
-            </mwc-list-item>
-            <!-- 
+            <div class="row" style="flex: 1;">
+              <mwc-list-item
+                twoline
+                style="flex: 1;"
+                @click=${() => (this._selectedOfferingHash = offeringHash)}
+              >
+                <span> ${offering.title} </span>
+                <span slot="secondary">
+                  ${this.deps.store.profilesStore.profileOf(
+                    offering.author_address
+                  )}
+                </span>
+              </mwc-list-item>
+
               <span style="width: 30px">
                 ${Math.round(offering.amount * 100) / 100} credits
-              </span> -->
+              </span>
+            </div>
             ${i < this._offeringsFromOthers.length - 1
               ? html`<li divider padded role="separator"></li> `
               : html``}

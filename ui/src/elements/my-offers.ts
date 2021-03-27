@@ -43,18 +43,7 @@ export abstract class MyOffers extends DepsElement<TransactorDeps> {
   }
 
   static get styles() {
-    return [
-      sharedStyles,
-      css`
-        .vertical-divider {
-          width: 1px;
-          opacity: 0.5;
-          background-color: black;
-          opacity: 0.1;
-          margin: 24px 0;
-        }
-      `,
-    ];
+    return [sharedStyles];
   }
 
   getScopedElements() {
