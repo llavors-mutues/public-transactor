@@ -10,8 +10,8 @@
     "dist"
   ],
   "scripts": {
-    "start-alice": "CONDUCTOR_URL=ws://localhost:8888 concurrently -k --names tsc,dev-server \"npm run build-watch\" \"web-dev-server --config demo/web-dev-server.config.mjs\" \"hc s generate ../zome/workdir/happ/transactor-happ.happ -r=8888\"",
-    "start-bob": "CONDUCTOR_URL=ws://localhost:8889 concurrently -k --names tsc,dev-server \"npm run build-watch\" \"web-dev-server --config demo/web-dev-server.config.mjs --port 8081\" \"hc s generate ../zome/workdir/happ/transactor-happ.happ -r=8889\"",
+    "start-alice": "CONDUCTOR_URL=ws://localhost:8888 concurrently -k --names tsc,dev-server \"npm run build-watch\" \"web-dev-server --config demo/web-dev-server.config.mjs\" \"hc s generate ../zome/workdir/happ/transactor-happ.happ -r=8888 network -b https://bootstrap-staging.holo.host quic\"",
+    "start-bob": "CONDUCTOR_URL=ws://localhost:8889 concurrently -k --names tsc,dev-server \"npm run build-watch\" \"web-dev-server --config demo/web-dev-server.config.mjs --port 8081\" \"hc s generate ../zome/workdir/happ/transactor-happ.happ -r=8889 network -b https://bootstrap-staging.holo.host quic\"",
     "build": "rimraf dist && tsc",
     "build-bundle": "rimraf dist && rollup -c rollup-bundle.config.js",
     "build-watch": "tsc --watch",
