@@ -7,10 +7,10 @@ import { AgentProfile, SearchAgent } from '@holochain-open-dev/profiles';
 
 import { sharedStyles } from './utils/shared-styles';
 import { Card } from 'scoped-material-components/mwc-card';
-import { connectStore, StoreElement } from '@holochain-open-dev/common';
-import { TransactorStore } from '../transactor.store';
+import { connectDeps } from '@holochain-open-dev/common';
+import { TransactorElement } from './utils/transactor-element';
 
-export abstract class CreateOffer extends StoreElement<TransactorStore> {
+export abstract class CreateOffer extends TransactorElement {
   /** Private properties */
 
   @query('#amount')
@@ -45,7 +45,7 @@ export abstract class CreateOffer extends StoreElement<TransactorStore> {
       ?.agent_pub_key as string;
     const amount = parseFloat(this._amountField.value);
 
-    await this.store.createOffer(recipientPubKey, amount);
+    await this._deps.store.createOffer(recipientPubKey, amount);
 
     this.dispatchEvent(
       new CustomEvent('offer-created', {
@@ -128,7 +128,7 @@ export abstract class CreateOffer extends StoreElement<TransactorStore> {
       'mwc-card': Card,
       'mwc-button': Button,
       'mwc-dialog': Dialog,
-      'search-agent': connectStore(SearchAgent, this.store.profilesStore),
+      'search-agent': connectDeps(SearchAgent, this._deps.store.profilesStore),
     };
   }
 }

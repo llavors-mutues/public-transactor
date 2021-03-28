@@ -1,4 +1,4 @@
-use hc_utils::WrappedEntryHash;
+use holo_hash::{EntryHashB64};
 use hdk::prelude::*;
 
 pub fn try_get_and_convert<T: TryFrom<Entry>>(
@@ -19,6 +19,6 @@ pub fn try_from_element<T: TryFrom<Entry>>(element: Element) -> ExternResult<T> 
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Hashed<T> {
-    pub hash: WrappedEntryHash,
+    pub hash: EntryHashB64,
     pub content: T,
 }

@@ -4,10 +4,10 @@ import { PendingOfferList } from './pending-offer-list';
 import { css, property } from 'lit-element';
 import { OfferDetail } from './offer-detail';
 import { sharedStyles } from './utils/shared-styles';
-import { connectStore, StoreElement } from '@holochain-open-dev/common';
-import { TransactorStore } from '../transactor.store';
+import { connectDeps } from '@holochain-open-dev/common';
+import { TransactorElement } from './utils/transactor-element';
 
-export abstract class MyOffers extends StoreElement<TransactorStore> {
+export abstract class MyOffers extends TransactorElement {
   @property({ type: String, attribute: false })
   _offerHash: string | undefined = undefined;
 
@@ -59,8 +59,8 @@ export abstract class MyOffers extends StoreElement<TransactorStore> {
   getScopedElements() {
     return {
       'mwc-card': Card,
-      'pending-offer-list': connectStore(PendingOfferList, this.store),
-      'offer-detail': connectStore(OfferDetail, this.store),
+      'pending-offer-list': connectDeps(PendingOfferList, this._deps),
+      'offer-detail': connectDeps(OfferDetail, this._deps),
     };
   }
 }

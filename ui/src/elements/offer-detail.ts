@@ -3,10 +3,9 @@ import { Button } from 'scoped-material-components/mwc-button';
 import { CircularProgress } from 'scoped-material-components/mwc-circular-progress';
 import { sharedStyles } from './utils/shared-styles';
 import { Offer } from '../types';
-import { StoreElement } from '@holochain-open-dev/common';
-import { TransactorStore } from '../transactor.store';
+import { TransactorElement } from './utils/transactor-element';
 
-export abstract class OfferDetail extends StoreElement<TransactorStore> {
+export abstract class OfferDetail extends TransactorElement {
   /** Public attributes */
 
   /**
@@ -42,14 +41,14 @@ export abstract class OfferDetail extends StoreElement<TransactorStore> {
   /** Actions */
 
   async firstUpdated() {
-    await this.store.fetchMyPendingOffers();
+    await this._deps.store.fetchMyPendingOffers();
     this._loading = false;
   }
 
   async acceptOffer() {
     this._accepting = true;
 
-    await this.store.acceptOffer(this.offerHash);
+    await this._deps.store.acceptOffer(this.offerHash);
 
     this.dispatchEvent(
       new CustomEvent('offer-completed', {
@@ -62,7 +61,7 @@ export abstract class OfferDetail extends StoreElement<TransactorStore> {
   }
 
   get offer(): Offer {
-    return this.store.offer(this.offerHash);
+    return this._deps.store.offer(this.offerHash);
   }
 
   /** Renders */
@@ -89,8 +88,8 @@ export abstract class OfferDetail extends StoreElement<TransactorStore> {
       <div class="row" style="flex: 1;">
         <div class="column">
           <span class="item title">
-            Offer ${this.store.isOutgoing(this.offer) ? ' to ' : ' from '}
-            ${this.store.counterpartyNickname(this.offer)}
+            Offer ${this._deps.store.isOutgoing(this.offer) ? ' to ' : ' from '}
+            ${this._deps.store.counterpartyNickname(this.offer)}
           </span>
           <span class="item">Agend ID: ${this.offer.recipient_pub_key}</span>
 
@@ -110,7 +109,7 @@ export abstract class OfferDetail extends StoreElement<TransactorStore> {
   }
 
   renderAcceptOffer() {
-    if (this.store.isOutgoing(this.offer)) {
+    if (this._deps.store.isOutgoing(this.offer)) {
       return html`<mwc-button
         style="flex: 1;"
         label="Awaiting for approval"

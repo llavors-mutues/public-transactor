@@ -1,4 +1,4 @@
-use hc_utils::{WrappedAgentPubKey, WrappedEntryHash};
+use holo_hash::{EntryHashB64, AgentPubKeyB64};
 use hdk::prelude::*;
 use transaction::Transaction;
 
@@ -11,26 +11,26 @@ use crate::{
 #[hdk_entry(id = "offer", visibility = "private")]
 #[derive(Clone)]
 pub struct Offer {
-    pub spender_pub_key: WrappedAgentPubKey,
-    pub recipient_pub_key: WrappedAgentPubKey,
+    pub spender_pub_key: AgentPubKeyB64,
+    pub recipient_pub_key: AgentPubKeyB64,
     pub amount: f64,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct CreateOfferInput {
-    recipient_pub_key: WrappedAgentPubKey,
+    recipient_pub_key: AgentPubKeyB64,
     amount: f64,
 }
 #[hdk_extern]
-pub fn create_offer(input: CreateOfferInput) -> ExternResult<WrappedEntryHash> {
+pub fn create_offer(input: CreateOfferInput) -> ExternResult<EntryHashB64> {
     let my_pub_key = agent_info()?.agent_latest_pubkey;
 
-    if input.recipient_pub_key.0.eq(&my_pub_key) {
+    if AgentPubKey::from(input.recipient_pub_key.clone()).eq(&my_pub_key) {
         return Err(crate::err("An agent cannot create an offer to themselves"));
     }
 
     let offer = Offer {
-        spender_pub_key: WrappedAgentPubKey(my_pub_key),
+        spender_pub_key: AgentPubKeyB64::from(my_pub_key),
         amount: input.amount,
         recipient_pub_key: input.recipient_pub_key.clone(),
     };
@@ -39,7 +39,7 @@ pub fn create_offer(input: CreateOfferInput) -> ExternResult<WrappedEntryHash> {
 
     // TODO: handle the result
     call_remote(
-        input.recipient_pub_key.0,
+        input.recipient_pub_key.into(),
         zome_info()?.zome_name,
         "receive_offer".into(),
         None,
@@ -53,7 +53,7 @@ pub fn create_offer(input: CreateOfferInput) -> ExternResult<WrappedEntryHash> {
 }
 
 #[hdk_extern]
-pub fn receive_offer(offer: Hashed<Offer>) -> ExternResult<WrappedEntryHash> {
+pub fn receive_offer(offer: Hashed<Offer>) -> ExternResult<EntryHashB64> {
     let offer_hash = internal_create_offer(&offer.content)?;
 
     emit_signal(SignalType::OfferReceived(offer))?;
@@ -62,8 +62,8 @@ pub fn receive_offer(offer: Hashed<Offer>) -> ExternResult<WrappedEntryHash> {
 }
 
 #[hdk_extern]
-pub fn accept_offer(offer_hash: WrappedEntryHash) -> ExternResult<WrappedEntryHash> {
-    let maybe_offer = internal_query_offer(offer_hash.0)?;
+pub fn accept_offer(offer_hash: EntryHashB64) -> ExternResult<EntryHashB64> {
+    let maybe_offer = internal_query_offer(offer_hash.into())?;
 
     let offer = maybe_offer.ok_or(crate::err("Offer not found"))?;
 
@@ -71,7 +71,7 @@ pub fn accept_offer(offer_hash: WrappedEntryHash) -> ExternResult<WrappedEntryHa
 
     // Notify new transaction to counterparty
     call_remote(
-        offer.spender_pub_key.0,
+        offer.spender_pub_key.into(),
         zome_info()?.zome_name,
         "notify_accepted_offer".into(),
         None,
@@ -97,7 +97,7 @@ pub fn query_my_pending_offers(_: ()) -> ExternResult<Vec<Hashed<Offer>>> {
         .map(|element| {
             let offer = utils::try_from_element(element.clone())?;
             Ok(Hashed {
-                hash: WrappedEntryHash(element.header().entry_hash().unwrap().clone()),
+                hash: EntryHashB64::from(element.header().entry_hash().unwrap().clone()),
                 content: offer,
             })
         })
@@ -107,11 +107,11 @@ pub fn query_my_pending_offers(_: ()) -> ExternResult<Vec<Hashed<Offer>>> {
 }
 
 /** Helper functions */
-fn internal_create_offer(offer: &Offer) -> ExternResult<WrappedEntryHash> {
+fn internal_create_offer(offer: &Offer) -> ExternResult<EntryHashB64> {
     create_entry(offer)?;
 
     let offer_hash = hash_entry(offer)?;
-    Ok(WrappedEntryHash(offer_hash))
+    Ok(EntryHashB64::from(offer_hash))
 }
 
 fn query_all_offers() -> ExternResult<Vec<Element>> {
