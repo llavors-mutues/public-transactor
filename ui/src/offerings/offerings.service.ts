@@ -6,7 +6,7 @@ export class OfferingsService {
   constructor(
     public appWebsocket: AppWebsocket,
     public cellId: CellId,
-    public zomeName = 'offerings'
+    public zomeName = 'transactor'
   ) {}
 
   createOffering(offering: CreateOfferingInput): Promise<string> {

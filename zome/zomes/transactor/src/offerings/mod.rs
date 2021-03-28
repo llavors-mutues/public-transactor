@@ -1,5 +1,5 @@
 use hdk::prelude::*;
-mod entries;
+pub mod entries;
 mod all_offerings_anchor;
 use holo_hash::EntryHashB64;
 use holo_hash::AgentPubKeyB64;
@@ -10,15 +10,6 @@ use entries::offering::{
     Offering,
     OfferingDTO
 };
-
-pub fn err(reason: &str) -> WasmError {
-    WasmError::Guest(String::from(reason))
-}
-
-entry_defs![
-    Path::entry_def(), 
-    entries::offering::Offering::entry_def()    
-]; 
 
 // TODO
 

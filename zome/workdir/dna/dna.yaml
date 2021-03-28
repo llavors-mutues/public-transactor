@@ -8,5 +8,3 @@ zomes:
     bundled: ../../target/wasm32-unknown-unknown/release/transactor.wasm
   - name: profiles
     bundled: ../../target/wasm32-unknown-unknown/release/profiles.wasm
-  - name: offerings
-    bundled: ../../target/wasm32-unknown-unknown/release/offering.wasm

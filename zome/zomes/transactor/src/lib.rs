@@ -3,6 +3,7 @@ use hdk::prelude::*;
 mod offer;
 mod signals;
 mod transaction;
+mod offerings;
 mod utils;
 
 pub fn err(reason: &str) -> WasmError {
@@ -12,7 +13,8 @@ pub fn err(reason: &str) -> WasmError {
 entry_defs![
     Path::entry_def(),
     offer::Offer::entry_def(),
-    transaction::Transaction::entry_def()
+    transaction::Transaction::entry_def(),
+    offerings::entries::offering::Offering::entry_def()    
 ];
 
 #[hdk_extern]

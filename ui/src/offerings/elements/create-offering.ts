@@ -1,6 +1,7 @@
 import { html, property, query } from 'lit-element';
 
 import { TextField } from 'scoped-material-components/mwc-textfield';
+import { TextArea } from 'scoped-material-components/mwc-textarea';
 import { Button } from 'scoped-material-components/mwc-button';
 import { Dialog } from 'scoped-material-components/mwc-dialog';
 import { AgentProfile, SearchAgent } from '@holochain-open-dev/profiles';
@@ -41,11 +42,11 @@ export abstract class CreateOffering extends DepsElement<OfferingDeps> {
       <mwc-card style="width: auto; flex: 1;">
         <div class="column" style="margin: 16px;">
           <span class="title" style="margin-bottom: 8px;"
-            >Create New Offering</span
+            >Create New Proposal</span
           >
 
           <mwc-textfield
-            style="padding-top: 16px; margin-bottom: 16px;"
+            style="padding-top: 16px; margin-bottom: 12px;"
             label="Title"
             id="title"
             required
@@ -56,7 +57,7 @@ export abstract class CreateOffering extends DepsElement<OfferingDeps> {
           ></mwc-textfield>
 
           <mwc-textfield
-            style="padding-top: 16px; margin-bottom: 16px;"
+            style="padding-top: 16px; margin-bottom: 12px;"
             label="Description"
             id="description"
             required
@@ -67,7 +68,7 @@ export abstract class CreateOffering extends DepsElement<OfferingDeps> {
           ></mwc-textfield>
 
           <mwc-textfield
-            style="padding-top: 16px; margin-bottom: 16px;"
+            style="padding-top: 16px; margin-bottom: 12px;"
             label="Amount"
             type="number"
             id="amount"
@@ -82,6 +83,7 @@ export abstract class CreateOffering extends DepsElement<OfferingDeps> {
           ></mwc-textfield>
 
           <mwc-button
+            style="margin-top: 12px;"
             raised
             label="CREATE OFFERING"
             .disabled=${!this._createEnabled}
@@ -95,6 +97,7 @@ export abstract class CreateOffering extends DepsElement<OfferingDeps> {
   getScopedElements() {
     return {
       'mwc-textfield': TextField,
+      'mwc-textarea': TextArea,
       'mwc-card': Card,
       'mwc-button': Button,
       'mwc-dialog': Dialog,

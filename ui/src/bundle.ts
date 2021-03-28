@@ -11,6 +11,9 @@ import { ProfilesService } from '@holochain-open-dev/profiles';
 import { ProfilesStore } from '@holochain-open-dev/profiles/profiles.store';
 import { connectDeps } from '@holochain-open-dev/common';
 import { MyBalance } from './elements/my-balance';
+import { OfferingsService } from './offerings/offerings.service';
+import { CreateOffering } from './offerings/elements/create-offering';
+import { OfferingList } from './offerings/elements/offering-list';
 
 function renderUnique(
   tag: string,
@@ -55,9 +58,30 @@ export default function lenses(
       }
     }
   );
+  const offeringService = new OfferingsService(appWebsocket, cellId);
 
   return {
     standalone: [
+      {
+        name: 'Offering List',
+        render(root: ShadowRoot) {
+          renderUnique(
+            'offering-list',
+            connectDeps(OfferingList, { store, offeringService }),
+            root
+          );
+        },
+      },
+      {
+        name: 'Create Offering',
+        render(root: ShadowRoot) {
+          renderUnique(
+            'create-offering',
+            connectDeps(CreateOffering, { store, offeringService }),
+            root
+          );
+        },
+      },
       {
         name: 'My Offers',
         render(root: ShadowRoot) {
